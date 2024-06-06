@@ -27,5 +27,13 @@ const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            is: {
+                args: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                msg: 'Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, and one number.',
+            }
+        }
     },
 });
+
+module.exports = User;
