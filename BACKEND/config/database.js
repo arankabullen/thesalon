@@ -1,5 +1,6 @@
 /*
 Author: Aranka Bullen
+* 
 */
 
 import {Sequelize} from 'sequelize';

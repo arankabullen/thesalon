@@ -1,49 +1,61 @@
 /***
  * Author: Aranka Bullen
- * 
- * ref: https://www.npmjs.com/package/passport
+ *
+ * methods:
  */
- 
+import {User} from "../models/index.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import passport from "passport";
-import GoogleStrategy from "passport-google-oauth20";
-import User from "../models/user.js";
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackUrl: process.env.GOOGLE_CALLBACK_URL,
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await User.findOne({ where: { googleId: profile.id } });
-        if (!User) {
-          user = await User.create({
-            googleId: profile.id,
-            name: profile.displayName,
-            email: profile.emails[0].value,
-          });
-        }
-        return done(null, user);
-      } catch (error) {
-        return done(error, false);
-      }
-    }
-  )
-);
 
-passport.serializeUser((user, done) => {
-  done(null, user.userid);
-});
-
-passport.deserializeUser(async (id, done) => {
+const register = async (req, res) => {
+  const { name, email, password, phone } = req.body;
   try {
-    const user = await User.findByPk(id);
-    done(null, user);
+    const hashedPassword = await bcrypt(password, 10);
+    const user = await User.create({
+      name,
+      email,  
+      password: hashedPassword,
+      phone,
+    });
+    res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
-    return done(error, null);
+    res.status(400).json({ message: "Error registering user", error });
   }
-});
+};
 
-export default passport;
+const login = async (req, res) => {
+    const {email, password} = req.body;
+  try {
+    const user = await User.findOne({where: email});
+    if(!user){
+        res.status(404).json({message:"User not found"});
+    }
+    const isFound= await bcrypt.compare(password, user.password)
+    if(!isFound){
+        res.status(400).json({message:"Password incorrect"});
+    }
+    const token = jwt.sign({id: user.userID}, process.env.JWT_SECRET, {expiresIn: '2h'});
+
+    res.status(200).json({token, user});
+  } 
+  catch(error) {
+        res.status(400).json({message:" Error logging in", error});
+  }
+};
+
+const googleLogin = passport.authenticate('google', {scope: ['profile', 'email']});
+
+const googleCallback = (req, res) => {
+    passport.authenticate('google', {session: false}, (err, user, info) => {
+        if(err || !user){
+            res.status(400).json({message: "Unable to login in to Google account", err});
+        }
+        const token = jwt.sign({id:user.userID}, process.env.JWT_SECRET, {expiresIn: "2h"});
+        res.status(201).json({token, user});
+    })
+    (req, res);
+}
+
+export {register, login, googleLogin, googleCallback};
