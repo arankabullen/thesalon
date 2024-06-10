@@ -4,9 +4,14 @@ Author: Aranka Bullen
 import {Model, DataTypes} from "sequelize";
 import sequelize  from "../config/database.js";
 
+import {Model, DataTypes} from "sequelize";
+import sequelize  from "../config/database.js";
+
 
 class Booking extends Model{}
+class Booking extends Model{}
 
+Booking.init({
 Booking.init({
   bookingID: {
     type: DataTypes.INTEGER,
@@ -25,6 +30,11 @@ Booking.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
+},
+  {
+    sequelize,  // Pass the Sequelize instance here
+    modelName: 'Booking',
+
 },
   {
     sequelize,  // Pass the Sequelize instance here

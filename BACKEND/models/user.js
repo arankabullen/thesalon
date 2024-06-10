@@ -4,9 +4,14 @@ Author: Aranka Bullen
 import {DataTypes, Model } from "sequelize";
 import sequelize from '../config/database.js';
 
+import {DataTypes, Model } from "sequelize";
+import sequelize from '../config/database.js';
+
 
 class User extends Model{}
+class User extends Model{}
 
+User.init( {
 User.init( {
     userID: {
         type: DataTypes.INTEGER,
@@ -32,6 +37,23 @@ User.init( {
             }
         }
     },
+    phone: {
+        type: DataTypes.INTEGER,
+        validate:{
+            is:{
+                args: /^(?=.*\d{9,})$/,
+                msg: "Enter your phone number including the area code without any spaces",
+            },
+        },
+
+    },
+    googleId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+    }, {
+      sequelize,
+      modelName: 'User',
     phone: {
         type: DataTypes.INTEGER,
         validate:{
