@@ -1,13 +1,13 @@
 /*
 Author: Aranka Bullen
 */
+import {Model, DataTypes} from "sequelize";
+import sequelize  from "../config/database.js";
 
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('../models/user');
-const Service = require('../models/service');
 
-const Booking = sequelize.define('Booking', {
+class Booking extends Model{}
+
+Booking.init({
   bookingID: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -25,8 +25,12 @@ const Booking = sequelize.define('Booking', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+},
+  {
+    sequelize,  // Pass the Sequelize instance here
+    modelName: 'Booking',
+
 });
 
 
-
-module.exports = Booking;
+export default Booking;
