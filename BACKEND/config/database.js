@@ -2,7 +2,6 @@
 Author: Aranka Bullen
 */
 
-
 const{ Sequelize}= require('sequelize');
 require('dotenv').config();
 
