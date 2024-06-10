@@ -1,35 +1,39 @@
 /*
 Author: Aranka Bullen
 */
+import { Model, DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
 
-const {DataTypes} = require('sequelize');
-const{ sequelize}= require('../config/database');
+class Service extends Model {}
 
-const Service = sequelize.define('Service',
-{
+Service.init(
+  {
     serviceID: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     serviceName: {
-        type: DataTypes.String,
-        allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     duration: {
-        type: type.INTEGER,
-        allowNull: false,
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     price: {
-        type: type.Decimal,
-        allowNull: false,
+      type: DataTypes.DECIMAL,
+      allowNull: false,
     },
     supply: {
-        type: type.Decimal,
-        allowNull: false,
+      type: DataTypes.DECIMAL,
+      allowNull: false,
     },
-});
+  },
+  {
+    sequelize,
+    modelName: "Service",
+  }
+);
 
-module.exports = Service;
-
-
+export default Service;

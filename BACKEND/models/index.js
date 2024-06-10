@@ -3,10 +3,10 @@ Author: Aranka Bullen
 ref: https://sequelize.org/docs/v6/category/core-concepts/
 */
 
-const sequelize = require('../config/database');
-const User = require('../models/user');
-const Service = require('../models/service');
-const Booking = require('../models/booking');
+import sequelize from '../config/database.js';
+import User from '../models/user.js';
+import Booking from '../models/booking.js';
+import Service from '../models/service.js';
 
 Booking.belongsTo(User, { foreignKey: 'userID' });
 Booking.belongsTo(Service, { foreignKey: 'serviceID' });
@@ -18,5 +18,4 @@ sequelize.sync({ force: false }).then(() => {
   console.log('Database & tables created!');
 });
 
-
-module.exports = { User, Service, Booking };
+export { User, Service, Booking };

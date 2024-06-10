@@ -1,19 +1,17 @@
 /* 
 Author: Aranka Bullen
 */
+import {DataTypes, Model } from "sequelize";
+import sequelize from '../config/database.js';
 
-const {DataTypes} = require('sequelize')
-const{ sequelize}= require('../config/database');
 
-const User = sequelize.define('User', {
+class User extends Model{}
+
+User.init( {
     userID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-    },
-    userName: {
-        type: DataTypes.STRING,
-        allowNull: false,
     },
     name: {
         type: DataTypes.STRING,
@@ -34,6 +32,23 @@ const User = sequelize.define('User', {
             }
         }
     },
+    phone: {
+        type: DataTypes.INTEGER,
+        validate:{
+            is:{
+                args: /^(?=.*\d{9,})$/,
+                msg: "Enter your phone number including the area code without any spaces",
+            },
+        },
+
+    },
+    googleId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+    }, {
+      sequelize,
+      modelName: 'User',
 });
 
-module.exports = User;
+export default User;

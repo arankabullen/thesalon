@@ -3,11 +3,11 @@
  *
  * methods:
  */
+import {User} from "../models/index.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import passport from "passport";
 
-const { User } = require("../models");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const passport = require('passport');
 
 const register = async (req, res) => {
   const { name, email, password, phone } = req.body;
@@ -45,9 +45,9 @@ const login = async (req, res) => {
   }
 };
 
-const googleLogIn = passport.authenticate('google', {scope: ['profile', 'email']});
+const googleLogin = passport.authenticate('google', {scope: ['profile', 'email']});
 
-const googleCallBack = (req, res) => {
+const googleCallback = (req, res) => {
     passport.authenticate('google', {session: false}, (err, user, info) => {
         if(err || !user){
             res.status(400).json({message: "Unable to login in to Google account", err});
@@ -58,4 +58,4 @@ const googleCallBack = (req, res) => {
     (req, res);
 }
 
-module.exports = {register, login, googleLogIn, googleCallBack};
+export {register, login, googleLogin, googleCallback};
